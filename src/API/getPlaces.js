@@ -7,6 +7,7 @@ export default async function getPlaces(query) {
       {
         params: {
           access_token: import.meta.env.VITE_TOKEN,
+          country: "au"
         },
       }
     );
