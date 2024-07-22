@@ -1,37 +1,42 @@
 import "../styles/AutoCompleteInput.scss";
-import PropTypes from "prop-types";
-import { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import getPlaces from "../API/getPlaces";
 
-AutoCompleteInput.propTypes = {
-  handleManualInputChange: PropTypes.func.isRequired,
-  setAddress: PropTypes.func.isRequired,
-  streetAndNumber: PropTypes.string.isRequired,
-};
+interface Suggestion {
+  place_name: string;
+  center: [number, number];
+  context: { id: string; text: string }[];
+}
 
-export default function AutoCompleteInput({
+interface AutoCompleteInputProps {
+  handleManualInputChange: (event: ChangeEvent<HTMLInputElement>, stateProperty: string) => void;
+  setAddress: (address: any) => void;
+  streetAndNumber: string;
+}
+
+const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   handleManualInputChange,
   setAddress,
   streetAndNumber,
-}) {
-  const [suggestions, setSuggestions] = useState([]);
+}) => {
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     handleManualInputChange(event, "streetAndNumber");
     handleInputChange(event.target.value);
   };
 
-  const handleInputChange = async (query) => {
-    const suggesions = await getPlaces(query);
-    setSuggestions(suggesions);
+  const handleInputChange = async (query: string) => {
+    const suggestions = await getPlaces(query);
+    setSuggestions(suggestions);
   };
 
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = (suggestion: Suggestion) => {
     const streetAndNumber = suggestion.place_name.split(",")[0];
     const latitude = suggestion.center[1];
     const longitude = suggestion.center[0];
 
-    const address = {
+    const address: any = {
       streetAndNumber,
       place: "",
       region: "",
@@ -73,4 +78,6 @@ export default function AutoCompleteInput({
       </div>
     </div>
   );
-}
+};
+
+export default AutoCompleteInput;

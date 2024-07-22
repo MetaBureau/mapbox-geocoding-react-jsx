@@ -15,7 +15,7 @@ function App() {
     longitude: "",
   });
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (address.streetAndNumber) {
@@ -23,7 +23,7 @@ function App() {
     }
   };
 
-  const updateCoordinates = (latitude, longitude) => {
+  const updateCoordinates = (latitude: string, longitude: string) => {
     setAddress({ ...address, latitude, longitude });
   };
 
